@@ -10,8 +10,6 @@ import api from './../../services/api';
 
 export default function EditContact() {
 
-  const [contacts, setContacts] = useState();
-
   let {id} = useParams();
 
   const username = localStorage.getItem('user');
@@ -35,14 +33,7 @@ export default function EditContact() {
         setLastname(response.data.contact[0].lastname);
         setPhoneList(response.data.contact[0].phones);
         setEmailList(response.data.contact[0].emails);
-        setAddressList([...addresses, { 
-          cep: response.data.contact[0].addresses[0].address.cep,
-          street: response.data.contact[0].addresses[0].address.street,
-          number: response.data.contact[0].addresses[0].address.number,
-          district: response.data.contact[0].addresses[0].address.district,
-          city: response.data.contact[0].addresses[0].address.city,
-          uf: response.data.contact[0].addresses[0].address.uf
-        }]);
+        setAddressList(response.data.contact[0].addresses.map(v => v.address));
       }       
     )
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,9 +104,9 @@ export default function EditContact() {
     };
 
     try {
-      await api.post('new', data);
+      await api.put(`contacts/${id}`, data);
       function alertSuccess(){
-        alert.success('Cadastro realizado com sucesso!',{
+        alert.success('Cadastro atualizado com sucesso!',{
           onClose: () => {
             history.push('/contacts');
           }
@@ -193,14 +184,14 @@ export default function EditContact() {
               <Fragment key={`${address}~${i}`}>
                 <div className="form-group" >
                   <div className="group-cep">
-                    <input name='cep' value={address.cep} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
-                    <input name='street' value={address.street} onChange={e => handleAdressChange(e, i)} placeholder="Endereço" />
-                    <input name='number' value={address.number} onChange={e => handleAdressChange(e, i)} placeholder="Número" />
+                    <input type="text" name='cep' value={address.cep || ''} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
+                    <input name='street' value={address.street || ''} onChange={e => handleAdressChange(e, i)} placeholder="Endereço" />
+                    <input name='number' value={address.number || ''} onChange={e => handleAdressChange(e, i)} placeholder="Número" />
                   </div>
                   <div className="group-bairro">
-                    <input name='district' value={address.district} onChange={e => handleAdressChange(e, i)} placeholder="Bairro" />
-                    <input name='city' value={address.city} onChange={e => handleAdressChange(e, i)} placeholder="Cidade" />
-                    <input name='uf' value={address.uf} onChange={e => handleAdressChange(e, i)} placeholder="UF" maxLength="2" />
+                    <input name='district' value={address.district || ''} onChange={e => handleAdressChange(e, i)} placeholder="Bairro" />
+                    <input name='city' value={address.city || ''} onChange={e => handleAdressChange(e, i)} placeholder="Cidade" />
+                    <input name='uf' value={address.uf || ''} onChange={e => handleAdressChange(e, i)} placeholder="UF" maxLength="2" />
                   </div>
                 </div>
                 <div className="add-endereco">

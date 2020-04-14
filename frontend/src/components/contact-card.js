@@ -1,9 +1,11 @@
 import React from 'react';
 import { FiTrash2, FiPhone, FiMail, FiUser } from 'react-icons/fi';
 import Modali, { useModali } from 'modali';
+import { useHistory } from 'react-router-dom';
 
 export default function ContactCard({contact, deleteContact}){
   
+  const history = useHistory();
   const [detalheModal, toggleDetalheModal] = useModali({
     animated: true,
     closeButton: true,
@@ -17,7 +19,7 @@ export default function ContactCard({contact, deleteContact}){
       <Modali.Button
         label="Alterar"
         isStyleDefault
-        onClick={() => toggleDetalheModal()}
+        onClick={() => history.push(`/contacts/${contact._id}`)}
       />
     ],
   });

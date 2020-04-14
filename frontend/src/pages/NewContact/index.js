@@ -1,12 +1,14 @@
 import React, { useState, Fragment } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft, FiPlusCircle, FiMinusCircle } from 'react-icons/fi';
-import { useAlert } from 'react-alert'
+import { useAlert } from 'react-alert';
+import cepPromise from 'cep-promise';
 
 import './styles.scss';
 import logoImage from '../../assets/logo.png';
 
-import api from './../../services/api';
+import api from '../../services/api';
+
 
 export default function NewContact() {
 
@@ -98,6 +100,19 @@ export default function NewContact() {
 
   }
 
+  //const [cep, setCep] = useState('');
+
+  const handleFindCep = (e, i) => {
+    const cep = e.target.value;
+    console.log(cep);
+    cepPromise(`${cep}`)
+      .then(res => {
+        setAddressList([{ cep: res.cep, street: res.street, number: "", district: res.neighborhood, city: res.city, uf: res.state }]);
+        const input = document.querySelector('input[name="number"]');
+        input.focus();
+    })
+  }
+
   return (
     <div className="new-container">
       <div className="content">
@@ -163,7 +178,7 @@ export default function NewContact() {
               <Fragment key={`${address}~${i}`}>
                 <div className="form-group" >
                   <div className="group-cep">
-                    <input name='cep' value={address.cep} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
+                    <input name='cep' onBlur={e => handleFindCep(e, i)} value={address.cep} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
                     <input name='street' value={address.street} onChange={e => handleAdressChange(e, i)} placeholder="Endereço" />
                     <input name='number' value={address.number} onChange={e => handleAdressChange(e, i)} placeholder="Número" />
                   </div>
