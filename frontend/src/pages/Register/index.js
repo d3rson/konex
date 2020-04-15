@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link, useHistory} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import { useAlert } from 'react-alert'
@@ -10,7 +10,7 @@ import './styles.scss';
 import logoImage from '../../assets/logo.png';
 
 
-export default function Register(){
+export default function Register() {
 
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
@@ -20,7 +20,7 @@ export default function Register(){
 
   const history = useHistory();
 
-  async function handleRegister(e){
+  async function handleRegister(e) {
     e.preventDefault();
 
     const data = {
@@ -32,18 +32,18 @@ export default function Register(){
 
     try {
       await api.post('register', data);
-      function alertSuccess(){
-        alert.success('Cadastro realizado com sucesso!',{
+      function alertSuccess() {
+        alert.success('Cadastro realizado com sucesso!', {
           onClose: () => {
             history.push('/');
           }
         });
       }
       alertSuccess();
-    } catch(err){
+    } catch (err) {
       alert.error('Erro no cadastro, tente novamente!');
     }
-    
+
 
   }
 
@@ -51,8 +51,14 @@ export default function Register(){
     <div className="register-container">
       <div className="content">
         <section>
-          <img src={logoImage} alt="KONTAKTO"/>
-          <h1>Cadastro</h1>
+          <img src={logoImage} alt="konex" />
+          <h1>
+            Cadastro
+            <Link className="back-link back-link-mobile" to="/">
+              <FiArrowLeft size={16} color="#00BFA6" />
+              Voltar para Logon
+            </Link>
+          </h1>
           <p>Faça seu cadastro, e começe a organizar os seus contatos!</p>
           <Link className="back-link" to="/">
             <FiArrowLeft size={16} color="#00BFA6" />
@@ -61,28 +67,28 @@ export default function Register(){
         </section>
 
         <form onSubmit={handleRegister}>
-          <input 
+          <input
             value={firstname}
             onChange={e => setFirstname(e.target.value)}
             placeholder="Nome"
             required
           />
-          <input 
+          <input
             value={lastname}
             onChange={e => setLastname(e.target.value)}
             placeholder="Sobrenome"
             required
           />
-          <input 
+          <input
             value={username}
             onChange={e => setUsername(e.target.value)}
             placeholder="Usuário"
             required
           />
-          <input 
+          <input
             value={password}
             onChange={e => setPassword(e.target.value)}
-            type="password" 
+            type="password"
             placeholder="Senha"
             required
           />

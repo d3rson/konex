@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiPlusCircle, FiMinusCircle } from 'react-icons/fi';
 import { useAlert } from 'react-alert'
+import cepPromise from 'cep-promise';
 
 import './styles.scss';
 import logoImage from '../../assets/logo.png';
@@ -10,7 +11,7 @@ import api from './../../services/api';
 
 export default function EditContact() {
 
-  let {id} = useParams();
+  let { id } = useParams();
 
   const username = localStorage.getItem('user');
 
@@ -27,19 +28,19 @@ export default function EditContact() {
       headers: {
         Authorization: username,
       }
-    }).then( 
+    }).then(
       response => {
         setName(response.data.contact[0].name);
         setLastname(response.data.contact[0].lastname);
         setPhoneList(response.data.contact[0].phones);
         setEmailList(response.data.contact[0].emails);
         setAddressList(response.data.contact[0].addresses.map(v => v.address));
-      }       
+      }
     )
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, username]);
 
-  
+
 
   //ADRESSESS
   const handleAdressChange = (e, index) => {
@@ -99,31 +100,51 @@ export default function EditContact() {
       lastname,
       phones,
       emails,
-      addresses: addresses.map(v => ({"address": v})),
+      addresses: addresses.map(v => ({ "address": v })),
       username: username
     };
 
     try {
       await api.put(`contacts/${id}`, data);
-      function alertSuccess(){
-        alert.success('Cadastro atualizado com sucesso!',{
+      function alertSuccess() {
+        alert.success('Cadastro atualizado com sucesso!', {
           onClose: () => {
             history.push('/contacts');
           }
         });
       }
       alertSuccess();
-    } catch(err){
+    } catch (err) {
       alert.error('Erro no cadastro, tente novamente!');
     }
 
+  }
+
+  const handleFindCep = (e, address) => {
+    const cep = e.target.value;
+    console.log(cep);
+    cepPromise(`${cep}`)
+      .then(res => {
+        setAddressList([...addresses.map(a => {
+          let newAddress
+          if (a === address) {
+            newAddress = { cep: res.cep, street: res.street, number: "", district: res.neighborhood, city: res.city, uf: res.state }
+          } else {
+            newAddress = a
+          }
+          return newAddress
+        })]);
+
+        const input = document.querySelector('input[name="number"]');
+        input.focus();
+      })
   }
 
   return (
     <div className="edit-container">
       <div className="content">
         <header>
-          <img src={logoImage} alt="KONTAKTO" />
+          <img src={logoImage} className="logoImage" alt="KONTAKTO" />
           <Link className="back-link" to="/contacts">
             <FiArrowLeft size={16} color="#00BFA6" />
             Voltar para Contatos
@@ -137,6 +158,7 @@ export default function EditContact() {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Nome"
+              required
             />
             <input
               value={lastname}
@@ -153,6 +175,7 @@ export default function EditContact() {
                   placeholder="Telefone"
                   value={x.phone}
                   onChange={e => handlePhoneChange(e, i)}
+                  required
                 />
                 <div className="btn-box">
                   {phones.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemovePhone(i)}><FiMinusCircle /></button>}
@@ -170,6 +193,7 @@ export default function EditContact() {
                   placeholder="E-mail"
                   value={x.email}
                   onChange={e => handleEmailChange(e, i)}
+                  required
                 />
                 <div className="btn-box">
                   {emails.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemoveEmail(i)}><FiMinusCircle /></button>}
@@ -184,7 +208,7 @@ export default function EditContact() {
               <Fragment key={`${address}~${i}`}>
                 <div className="form-group" >
                   <div className="group-cep">
-                    <input type="text" name='cep' value={address.cep || ''} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
+                    <input type="text" onBlur={e => handleFindCep(e, address)} name='cep' value={address.cep || ''} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
                     <input name='street' value={address.street || ''} onChange={e => handleAdressChange(e, i)} placeholder="Endereço" />
                     <input name='number' value={address.number || ''} onChange={e => handleAdressChange(e, i)} placeholder="Número" />
                   </div>
@@ -195,8 +219,8 @@ export default function EditContact() {
                   </div>
                 </div>
                 <div className="add-endereco">
-                  {addresses.length - 1 === i && <button type="button" onClick={handleAddAddress}><FiPlusCircle /> <span>Adicionar novo endereço</span></button>}
                   {addresses.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemoveAddress(i)}><FiMinusCircle /> <span>Remover endereço</span></button>}
+                  {addresses.length - 1 === i && <button type="button" onClick={handleAddAddress}><FiPlusCircle /> <span>Adicionar novo endereço</span></button>}
                 </div>
               </Fragment>
             );

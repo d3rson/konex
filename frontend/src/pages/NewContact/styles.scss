@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 .new-container {
   width: 100%;
   max-width: 1120px;
@@ -10,6 +12,14 @@
   align-items: top;
   justify-content: center;
 
+  @media #{$mq-mobile} {
+    padding: 20px;
+    margin-top: 0;
+    height: auto;
+    max-width: 100%;
+    width: 100%;
+  }
+
   .content {
     width: 100%;
     padding: 50px 50px;
@@ -17,13 +27,23 @@
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 
+    @media #{$mq-mobile} {
+      flex-direction: column;
+      padding: 0;
+      box-shadow: none;
+    }
+
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 30px;
-      img {
+
+      .logoImage {
         height: 64px;
+        @media #{$mq-mobile} {
+          height: 40px;
+        }
       }
       .back-link {
         margin-top: 0;
@@ -36,20 +56,37 @@
         margin-bottom: 15px;
         color: #333;
         text-align: left;
+        @media #{$mq-mobile} {
+          margin-top: 30px;
+        }
+      }
+      input{
+        height: 40px;
       }
       .form-group {
         margin-bottom: 10px;
+        @media #{$mq-mobile} {
+          margin-bottom: 0;
+        }
 
         &.group-name {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           grid-gap: 30px;
+          @media #{$mq-mobile} {
+            grid-template-columns: repeat(1, 1fr);
+            grid-gap: 0;
+          }
         }
 
         &.group-phone {
           display: grid;
           grid-template-columns: 1fr 110px;
           grid-gap: 30px;
+          @media #{$mq-mobile} {
+            grid-template-columns: 1fr 80px;
+            grid-gap: 0px;
+          }
 
           .btn-box{
             display: flex;
@@ -76,6 +113,10 @@
                 &:hover{
                   border-color: #CC0000;
                 }
+              }
+              @media #{$mq-mobile} {
+                width:40px ;
+                height: 40px;
               }
             }
 
@@ -87,6 +128,10 @@
           display: grid;
           grid-template-columns: 1fr 110px;
           grid-gap: 30px;
+          @media #{$mq-mobile} {
+            grid-template-columns: 1fr 80px;
+            grid-gap: 0px;
+          }
 
           .btn-box{
             display: flex;
@@ -114,6 +159,10 @@
                   border-color: #CC0000;
                 }
               }
+              @media #{$mq-mobile} {
+                width:40px ;
+                height: 40px;
+              }
             }
 
           }
@@ -123,16 +172,34 @@
           display: grid;
           grid-template-columns: 150px 1fr 150px;
           grid-gap: 30px;
+          
+          @media #{$mq-mobile} {
+            grid-template-columns: 1fr ;
+            grid-gap: 0px;
+          }
+
           input {
             margin-bottom: 20px;
+            @media #{$mq-mobile} {
+              margin-bottom: 10px;
+            }
           }
         }
         .group-bairro {
           display: grid;
           grid-template-columns: 1fr 1fr 100px;
           grid-gap: 30px;
+          
+          @media #{$mq-mobile} {
+            grid-template-columns: 1fr ;
+            grid-gap: 0px;
+            margin-bottom: 20px;
+          }
           input {
             margin-bottom: 20px;
+            @media #{$mq-mobile} {
+              margin-bottom: 10px;
+            }
           }
         }
 
@@ -143,6 +210,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        @media #{$mq-mobile} {
+          display: block;
+        }
 
         button{
           display: flex;
@@ -158,6 +228,9 @@
 
           &.vermelho{
             color: #CC0000;
+          }
+          @media #{$mq-mobile} {
+            margin-bottom: 10px;
           }
         }
       }

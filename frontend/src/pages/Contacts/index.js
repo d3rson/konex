@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FiPower, FiSearch } from 'react-icons/fi';
+import { Link, useHistory } from 'react-router-dom';
+import { FiPower, FiSearch, FiUserPlus } from 'react-icons/fi';
 import ContactList from '../../components/contact-list';
 import api from '../../services/api';
 import './styles.scss';
 import logoImage from '../../assets/logo.png';
 
-let letters = "abcdefghijklmnopqrsxuvwxyz";
+let letters = "abcdefghijklmnopqrstuvwxyz";
 letters = letters.split("");
 
 export default function Contacts() {
@@ -18,6 +18,8 @@ export default function Contacts() {
 
   const nomeUsuario = localStorage.getItem('name');
   const username = localStorage.getItem('user');
+
+  const history = useHistory();
 
   useEffect(() => {
     api.get('contacts', {
@@ -55,16 +57,26 @@ export default function Contacts() {
     }catch(err){
       alert('Erro ao deletar o contato, tente novamente!');
     }
-  }   
+  }
+  
+  function handleLogout(){
+    localStorage.clear();
+    history.push("/");
+  }
 
   return (
     <div className="contact-container">
       <header>
-        <img src={logoImage} alt="KONTAKTO" />
-        <span>Bem vindo, {nomeUsuario}</span>
-        <Link className="button" to="/contacts/new">Cadastrar novo contato</Link>
+        
+        <img src={logoImage} className="logoImage" alt="konex" />
+        <span className="welcome">Bem vindo, {nomeUsuario}</span>
+        
+        <Link className="button" to="/contacts/new">
+          <FiUserPlus className="addMobile" site={18} color="#ffffff" />
+          <span>Cadastrar novo contato</span>
+        </Link>
         <button type="button">
-          <FiPower size={18} color="#00BFA6" />
+          <FiPower onClick={handleLogout} size={18} color="#00BFA6" />
         </button>
       </header>
 
@@ -77,7 +89,10 @@ export default function Contacts() {
       </div>
 
       <div className="filter-contacts">
-        <button type="button" onClick={limpar}>VER TODOS</button>
+        <button type="button" onClick={limpar}>
+          <span className="desk">VER TODOS</span>
+          <span className="mobile">*</span>
+        </button>
         {letters.map(letter => (
           <button
             type="button"

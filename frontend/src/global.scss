@@ -1,12 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
 //VARIÁVEIS
-/** CORES **/
-$primary: #00BFA6;
-$grey: #f0f0f5;
-$preto: #000000;
-$darkGrey: #333333;
-$branco: #ffffff;
+@import './variables.scss';
 
 * {
   margin: 0;
@@ -63,6 +58,12 @@ form{
   line-height: 60px;
   transition: filter 0.2s;
 
+  @media #{$mq-mobile} {
+    height: 50px;
+    line-height: 50px;
+    text-transform: uppercase;
+  }
+
   &:hover{
     filter: brightness(90%);
   }
@@ -72,11 +73,15 @@ form{
   display: flex;
   align-items: center;
   margin-top: 40px;
-  color: #41414d;
+  color: $preto;
   font-size: 18px;
   text-decoration: none;
   font-weight: 500;
   transition: opacity 0.2s;
+  @media #{$mq-mobile} {
+    font-size: 14px;
+    justify-content: center;
+  }
 
   svg{
     margin-right: 8px;

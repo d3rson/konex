@@ -94,7 +94,8 @@ routes.get('/contacts', async(req, res) =>{
 routes.get('/contacts/:id', async(req, res) =>{
     const user = req.headers.authorization;
     try{
-        const contact = await Contact.find({username: user});
+        const {id} = req.params;
+        const contact = await Contact.find({_id: id});
         return res.send({contact});
     } catch (err){
         console.log(err);

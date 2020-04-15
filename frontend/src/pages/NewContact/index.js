@@ -100,14 +100,21 @@ export default function NewContact() {
 
   }
 
-  //const [cep, setCep] = useState('');
-
-  const handleFindCep = (e, i) => {
+  const handleFindCep = (e, address) => {
     const cep = e.target.value;
     console.log(cep);
     cepPromise(`${cep}`)
       .then(res => {
-        setAddressList([{ cep: res.cep, street: res.street, number: "", district: res.neighborhood, city: res.city, uf: res.state }]);
+        setAddressList([...addresses.map(a=>{
+          let newAddress
+          if (a === address){
+            newAddress = { cep: res.cep, street: res.street, number: "", district: res.neighborhood, city: res.city, uf: res.state }
+          } else {
+            newAddress = a
+          }
+          return newAddress
+        })]);
+        
         const input = document.querySelector('input[name="number"]');
         input.focus();
     })
@@ -117,7 +124,7 @@ export default function NewContact() {
     <div className="new-container">
       <div className="content">
         <header>
-          <img src={logoImage} alt="KONTAKTO" />
+          <img src={logoImage} className="logoImage" alt="KONTAKTO" />
           <Link className="back-link" to="/contacts">
             <FiArrowLeft size={16} color="#00BFA6" />
             Voltar para Contatos
@@ -131,6 +138,7 @@ export default function NewContact() {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Nome"
+              required
             />
             <input
               value={lastname}
@@ -147,6 +155,7 @@ export default function NewContact() {
                   placeholder="Telefone"
                   value={x.phone}
                   onChange={e => handlePhoneChange(e, i)}
+                  required
                 />
                 <div className="btn-box">
                   {phones.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemovePhone(i)}><FiMinusCircle /></button>}
@@ -164,6 +173,7 @@ export default function NewContact() {
                   placeholder="E-mail"
                   value={x.email}
                   onChange={e => handleEmailChange(e, i)}
+                  required
                 />
                 <div className="btn-box">
                   {emails.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemoveEmail(i)}><FiMinusCircle /></button>}
@@ -178,7 +188,7 @@ export default function NewContact() {
               <Fragment key={`${address}~${i}`}>
                 <div className="form-group" >
                   <div className="group-cep">
-                    <input name='cep' onBlur={e => handleFindCep(e, i)} value={address.cep} onChange={e => handleAdressChange(e, i)} placeholder="Cep" />
+                    <input name='cep' onBlur={e => handleFindCep(e, address)} value={address.cep} onChange={e => handleAdressChange(e, i)} placeholder="Cep"/>
                     <input name='street' value={address.street} onChange={e => handleAdressChange(e, i)} placeholder="Endereço" />
                     <input name='number' value={address.number} onChange={e => handleAdressChange(e, i)} placeholder="Número" />
                   </div>
@@ -189,8 +199,8 @@ export default function NewContact() {
                   </div>
                 </div>
                 <div className="add-endereco">
-                  {addresses.length - 1 === i && <button type="button" onClick={handleAddAddress}><FiPlusCircle /> <span>Adicionar novo endereço</span></button>}
                   {addresses.length !== 1 && <button type="button" className="vermelho" onClick={() => handleRemoveAddress(i)}><FiMinusCircle /> <span>Remover endereço</span></button>}
+                  {addresses.length - 1 === i && <button type="button" onClick={handleAddAddress}><FiPlusCircle /> <span>Adicionar novo endereço</span></button>}
                 </div>
               </Fragment>
             );

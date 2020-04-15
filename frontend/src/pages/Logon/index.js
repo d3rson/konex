@@ -3,7 +3,7 @@ import {Link, useHistory} from 'react-router-dom';
 import {FiLogIn} from 'react-icons/fi';
 
 import './styles.scss';
-import kontaktoImage from '../../assets/imgLogin.png';
+import konexImage from '../../assets/imgLogin.png';
 import logoImage from '../../assets/logo.png';
 
 import api from './../../services/api';
@@ -17,6 +17,8 @@ export default function Logon(){
 
   const alert = useAlert();
   const history = useHistory();
+
+  localStorage.clear();
 
   async function handleLogin(e){
     e.preventDefault();
@@ -32,14 +34,14 @@ export default function Logon(){
       history.push('/contacts');
 
     } catch(err){
-      alert.error('Erro no cadastro, tente novamente!');
+      alert.error('Erro no login, tente novamente!');
     }
   }
 
   return (
     <div className="logon-container">
       <section className="form">
-        <img src={logoImage} alt="KONTAKTO"/>
+        <img src={logoImage} alt="konex"/>
 
         <form onSubmit={handleLogin}>
           <h1>Faça seu logon</h1>
@@ -61,7 +63,7 @@ export default function Logon(){
           </Link>
         </form>
       </section>
-      <img src={kontaktoImage} alt="KONTAKTO"/>
+      <img src={konexImage} className="konexImage" alt="konex"/>
     </div>
   )
 }
